@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Child {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  age       Int
+  lastTrait String?
+  history   History[]
+  createdAt DateTime  @default(now())
+}
+
+model History {
+  id           Int      @id @default(autoincrement())
+  trait        String
+  scenarioText String?
+  scenarioType String?  // plain, framed, insight
+  duration     Int?     // milidetik
+  timestamp    DateTime @default(now())
+  childId      Int
+  child        Child    @relation(fields: [childId], references: [id])
+}
+// Tambahkan ini di paling bawah schema.prisma
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+}
